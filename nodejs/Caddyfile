@@ -1,0 +1,4 @@
+api.ksotis-dev.com {
+    reverse_proxy webservice:3000
+    tls internal
+}
