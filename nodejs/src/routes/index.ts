@@ -1,14 +1,23 @@
-import { Router } from 'express'
-import assets from './assets'
+import { Router, Express } from "express";
+import Assets from "./assets";
 
-const router = Router()
+const _routes: [string, Router][] = [["/assets", Assets]];
 
-router.get("/", (req, res) => {
-  res.status(200).send({
-    message: "pong"
-  })
-})
+const routes = (app: Express) => {
+  const router = Router();
 
-router.use("/assets", assets)
+  router.get("/", (req, res) => {
+    res.status(200).send({
+      message: "pong",
+    });
+  });
 
-export default router
+  _routes.forEach((route) => {
+    const [url, controller] = route;
+    router.use(url, controller);
+  });
+
+  app.use(router)
+};
+
+export default routes;
