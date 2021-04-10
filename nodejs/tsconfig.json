@@ -12,10 +12,10 @@
   },
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "**/*.spec.ts"
   ],
   "include": [
     "src/**/*.ts",
-    "tests/**/*.spec.ts"
   ]
 }
