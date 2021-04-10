@@ -2,7 +2,8 @@ import express from "express";
 import { json, urlencoded } from "body-parser";
 import bootstrap from './bootstrap'
 
-const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || "0.0.0.0"
+const PORT = parseInt(process.env.PORT || "3000", 10);
 
 const app = express();
 
@@ -11,6 +12,6 @@ app.use(urlencoded({ extended: true }));
 
 bootstrap(app)
 
-app.listen(PORT, () =>
-  console.log(`express server is running on http://localhost:${PORT}`)
+app.listen(PORT, HOST, () =>
+  console.log(`express server is running on http://${HOST}:${PORT}`)
 );

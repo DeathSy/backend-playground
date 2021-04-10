@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import assets from './assets'
 
 const router = Router()
 
@@ -7,5 +8,7 @@ router.get("/", (req, res) => {
     message: "pong"
   })
 })
+
+router.use("/assets", assets)
 
 export default router
