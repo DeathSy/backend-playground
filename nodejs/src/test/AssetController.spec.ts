@@ -1,5 +1,46 @@
 import request from "supertest";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import app from "../server";
+
+const mockS3Send = jest.fn(() => ({
+  Contents: [
+    {
+      ETag: "random-hash",
+      Key: "/image-key",
+      LastModifed: new Date(),
+      Size: 256000,
+    },
+    {
+      ETag: "random-hash",
+      Key: "/image-key",
+      LastModifed: new Date(),
+      Size: 256000,
+    },
+    {
+      ETag: "random-hash",
+      Key: "/image-key",
+      LastModifed: new Date(),
+      Size: 256000,
+    },
+  ],
+}));
+
+jest.mock("@aws-sdk/client-s3", () => {
+  return {
+    ...jest.requireActual("@aws-sdk/client-s3"),
+    S3Client: jest.fn().mockImplementation(() => {
+      return { send: mockS3Send };
+    }),
+  };
+});
+
+jest.mock("@aws-sdk/s3-request-presigner", () => {
+  return {
+    getSignedUrl: jest.fn().mockImplementation(() => {
+      return "https://image-host.com/region/path/to/presign-image/image-key.jpg";
+    }),
+  };
+});
 
 describe("AssetController", () => {
   describe("all", () => {
@@ -9,9 +50,12 @@ describe("AssetController", () => {
       expect(result.body.assets).not.toBeUndefined();
       expect(result.body.assets).toHaveLength(3);
 
+      expect(mockS3Send).toBeCalledTimes(1);
+      expect(getSignedUrl).toBeCalledTimes(3);
+
       const [, asset] = result.body.assets;
       expect(asset).not.toBeUndefined();
-      expect(asset).toEqual({
+      expect(asset).toStrictEqual({
         url:
           "https://image-host.com/region/path/to/presign-image/image-key.jpg",
       });
