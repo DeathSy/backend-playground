@@ -1,28 +1,10 @@
 import request from "supertest";
+import { StorageObject } from "./__mocks__/storageObject";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import app from "../server";
 
 const mockS3Send = jest.fn(() => ({
-  Contents: [
-    {
-      ETag: "random-hash",
-      Key: "/image-key",
-      LastModifed: new Date(),
-      Size: 256000,
-    },
-    {
-      ETag: "random-hash",
-      Key: "/image-key",
-      LastModifed: new Date(),
-      Size: 256000,
-    },
-    {
-      ETag: "random-hash",
-      Key: "/image-key",
-      LastModifed: new Date(),
-      Size: 256000,
-    },
-  ],
+  Contents: StorageObject,
 }));
 
 jest.mock("@aws-sdk/client-s3", () => {
